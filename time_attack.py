@@ -95,8 +95,7 @@ class SpecialWord(WordRain):
         WordRain.__init__(self, word, x)
         self.color = YELLOW        
         self.setup_word()
-        #self.special = random.randint(0, len(Special.rev_lookup))
-        self.special = 0
+        self.special = random.randint(0, len(Special.rev_lookup))
 
     def do_special(self, castle, wg, allg):
         if self.special == 0:

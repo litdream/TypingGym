@@ -1,7 +1,7 @@
 # ytt
 Typing Tutor.  This helps keeping eyes on screen, and gets keystroke feedback from screen.
 
-![Screenshot](ytt.jpg)
+![Module 1](ytt.jpg)  ![Module 2](ytt2.jpg)
 
 ytt will tell which hand and finger to use as array of blue triangles.
 The goal is, using screen only, to make a right finger to hit the right key.
