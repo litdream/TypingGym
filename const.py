@@ -1,11 +1,14 @@
 import pygame
 
+TITLE = 'Welcome to the Typing Gym.'
 BLACK = ( 0, 0, 0)
 WHITE = ( 255, 255, 255)
 RED  =  ( 255,0,0)
+DARK_RED = (127, 0, 0)
 GREEN = ( 0, 255,0)
 BLUE  = ( 0, 0, 255)
 ORANGE = (255,165,0)
+YELLOW = (255,255,0)
 
 def load_location_file(fn="location.dat"):
     # Rough spacing:

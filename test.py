@@ -4,12 +4,10 @@ import sys
 import pygame
 import random
 import time
+from const import *
+from keyboard import *
+from word_dict import *
 
-BLACK = ( 0, 0, 0)
-WHITE = ( 255, 255, 255)
-RED  =  ( 255,0,0)
-GREEN = ( 0, 255,0)
-BLUE  = ( 0, 0, 255)
 
 location = dict()
 
@@ -23,6 +21,23 @@ class RealKeyboard(pygame.sprite.Sprite):
         self.rect.x=5
         self.rect.y=300
 
+#font_size = 40    # for main1
+font_size = 15    # for main2
+score = 0
+
+def set_font():
+    font = None
+    if 'freemono' in pygame.font.get_fonts():
+        # Linux
+        font = pygame.font.SysFont("freemono", font_size)
+    elif 'menlo' in pygame.font.get_fonts():
+        # Apple
+        font = pygame.font.SysFont("menlo", font_size)
+    else:
+        # Windows
+        font = pygame.font.SysFont("consolas", font_size)
+    return font
+        
 def key_indicate(screen, color, punch):
     loc = location[punch]
     pygame.draw.circle(screen, color, loc, 15, 4)
@@ -83,7 +98,7 @@ def load_location_file():
             rtn[arr[0].strip()] = ( int(arr[1]), int(arr[2]))
     return rtn
 
-if __name__ == '__main__':
+def main1():
     pygame.init()
 
     screen = pygame.display.set_mode((600,600))
@@ -184,3 +199,62 @@ if __name__ == '__main__':
         pygame.display.flip()
 
     pygame.quit()
+
+
+class Word(pygame.sprite.Sprite):
+    def __init__(self, word):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("real-keyboard.jpg").convert()
+        self.rect = self.image.get_rect()
+        self.word = word
+        
+    def update(self):
+        self.rect.x=0
+        self.rect.y=0
+    
+    
+def main2():
+    pygame.init()
+    screen = pygame.display.set_mode((600,600))
+    clock = pygame.time.Clock()
+    font = set_font()
+    pygame.display.set_caption(TITLE)
+    back_ground = pygame.image.load("m2_back.jpg").convert()
+    
+    allSprites = pygame.sprite.Group()
+    wordRains  = pygame.sprite.Group()
+    
+    from time_attack import Castle
+    castle = Castle()
+    allSprites.add(castle)
+    
+    done = False
+    all_words = get_all_levels()
+    while not done:
+        screen.fill(BLACK)
+        screen.blit(back_ground, (0,0))
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                done = True
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_q and ( event.mod & pygame.KMOD_LCTRL ):
+                    pygame.quit()
+
+        allSprites.update()
+        allSprites.draw(screen)
+
+        # 227,465 (width:146)
+        pygame.draw.rect(screen, BLACK, (227,465,146,20))
+
+        text = font.render("1234567890123456", True, WHITE)
+        screen.blit(text, (229, 467))
+
+        clock.tick(60)
+        pygame.display.flip()
+        
+    pygame.quit()
+
+if __name__ == '__main__':
+    #main1()
+    main2()

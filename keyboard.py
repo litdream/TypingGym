@@ -107,6 +107,9 @@ def get_key_pressed(event):
     elif event.key == pygame.K_MINUS:      pressed_key = '-'
     elif event.key == pygame.K_PLUS:       pressed_key = '+'
     elif event.key == pygame.K_EQUALS:     pressed_key = '='
+    elif event.key == pygame.K_SPACE:      pressed_key = ' '
+    elif event.key == pygame.K_RETURN:     pressed_key = '\r'
+    elif event.key == pygame.K_BACKSPACE:  pressed_key = '\b'
     else:
         pressed_key = None
         
