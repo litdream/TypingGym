@@ -11,7 +11,7 @@ from keyboard import *
 # Alice in Wonderland were from gutenberg.org.
 #   https://www.gutenberg.org/ebooks/28885
 
-font_size=15
+font_size=20
 def set_font():
     font = None
     if 'freemono' in pygame.font.get_fonts():
@@ -25,16 +25,23 @@ def set_font():
         font = pygame.font.SysFont("consolas", font_size)
     return font
 
+def load_line(lst, line_length=50):
+    rtn = list()
+    while lst and line_length > len(' '.join(rtn)):
+        rtn.append(lst.pop())
+    if line_length > len(' '.join(rtn)):
+        lst.append(rtn.pop())
+    return rtn
+
 def main_screen(fname):
     arr = list()
     with open(fname) as fh:
         for l in fh:
             if len(l.strip()) == 0: continue
-            arr.append(l.strip())
-    txt = ' '.join(arr)
+            arr += l.strip().split()
+    arr.reverse()
 
     screen = pygame.display.set_mode((600,600))
-
     allSprites = pygame.sprite.Group()
     keyimg = RealKeyboard()
     allSprites.add(keyimg)
@@ -48,6 +55,10 @@ def main_screen(fname):
     i = 0
     leave_key = None
 
+    typed_line = None
+    cur_line = ' '.join(load_line(arr))
+    next_line = ' '.join(load_line(arr))
+    
     while not done:
         screen.fill(BLACK)
 
@@ -65,11 +76,17 @@ def main_screen(fname):
                 done = True
                 pygame.quit()
 
+                
+        # Scrolling
+        typed_line = cur_line
+        cur_line = next_line
+        next_line = ' '.join(load_line(arr))
 
         clock.tick(60)
         pygame.display.flip()    
+        done = ( len(cur_line.strip()) == 0 )
+        print cur_line
         
-    
 def main_loop():
     global score
     pygame.init()
