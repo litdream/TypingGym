@@ -94,7 +94,23 @@ def load_line(lst, line_length=None):
         lst.append(rtn.pop())
     return rtn
 
+def render_stat(cpm, mpm):
+    global font
+    if not font:
+        font = set_font()
+
+    screen = pygame.display.get_surface()
+    tx,ty = 10,10
+    text = font.render('%03d keys per minute,      %02d words per minute' % (cpm, mpm), True, WHITE  )
+    screen.blit(text, (tx, ty))
+    
+
 def main_screen(fname):
+    import time
+    t_app_started = time.time()
+    t_type_started = None
+    typed_lines = list()
+
     arr = list()
     with open(fname) as fh:
         for l in fh:
@@ -135,14 +151,34 @@ def main_screen(fname):
     articleSprites.add(l2)
     idx = 0
     leave_key = None
-    
+    last_updated = time.time()
+    cpm, mpm = 0,0
     while not done:
         screen.fill(BLACK)
         allSprites.update()
         allSprites.draw(screen)
         key_indicate(screen, ORANGE, cur_line[idx])
-        render_userinput( cur_line, user )
-        
+        render_userinput( cur_line, user)
+
+        #calculate cpm, mpm
+        # t0 = t_type_started
+        correct_user = list()
+        for i,c in enumerate(user):
+            if c == cur_line[i]:
+                correct_user.append(c)
+            else:
+                break
+        str_sofar = ' '.join(typed_lines) + ' ' + ''.join(correct_user)
+
+        now = time.time()
+        if t_type_started:
+            if now - last_updated > 3:
+                interval = now - t_type_started
+                cpm = len(str_sofar) / interval * 60
+                mpm = len( str_sofar.split()) / interval * 60
+                last_updated = now
+            render_stat(cpm, mpm)
+            
         #
         # Event handle
         #
@@ -152,8 +188,8 @@ def main_screen(fname):
                 done = True
                 pygame.quit()
             elif event.type == pygame.KEYDOWN:
-                # TODO:
-                #   Move back up, rather than quit.
+                if t_type_started is None:
+                    t_type_started = time.time()
                 if event.key == pygame.K_q and ( event.mod & pygame.KMOD_LCTRL ):
                     pygame.quit()
                 if event.mod & pygame.KMOD_SHIFT:
@@ -188,6 +224,8 @@ def main_screen(fname):
                     idx += 1
         
         if cur_line == ''.join(user):
+            typed_lines.append(cur_line)
+            
             # Scrolling
             cur_line = next_line
             next_line = ' '.join(load_line(arr)) + " "
