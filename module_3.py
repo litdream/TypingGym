@@ -37,7 +37,8 @@ class UserLine(pygame.sprite.Sprite):
     def match_render(self, userlist, linelist):
         pass
         
-font_size=20
+font_size=18
+font = None
 def set_font():
     font = None
     if 'freemono' in pygame.font.get_fonts():
@@ -51,7 +52,30 @@ def set_font():
         font = pygame.font.SysFont("consolas", font_size)
     return font
 
-def load_line(lst, line_length=50):
+def render_userinput( cur, user ):
+    global font
+    if not font:
+        font = set_font()
+
+    screen = pygame.display.get_surface()
+    tx,ty = 10,180
+    for i, c in enumerate(user):
+        if cur[i] == c:
+            text = font.render(c, True, GREEN)
+        else:
+            text = font.render(c, True, RED)            
+        screen.blit(text, (tx, ty))
+        tx+= font_size/2 + 2
+    
+def load_line(lst, line_length=None):
+    if line_length is None:
+        if sys.platform.startswith('linux'):
+            line_length = 42
+        elif sys.platform == 'darwin':
+            line_length = 45
+        else:
+            line_length = 50
+    
     rtn = list()
     while lst and line_length > len(' '.join(rtn)):
         rtn.append(lst.pop())
@@ -71,53 +95,105 @@ def main_screen(fname):
     allSprites = pygame.sprite.Group()
     keyimg = RealKeyboard()
     allSprites.add(keyimg)
-
+    articleSprites = pygame.sprite.Group()
+    
     done = False
     pressed_key = None
     clock = pygame.time.Clock()
     user = list()
 
-    font =set_font()
     i = 0
     leave_key = None
 
     typed_line = None
-    cur_line = ' '.join(load_line(arr))
-    next_line = ' '.join(load_line(arr))
+    cur_line = ' '.join(load_line(arr)) + " "
+    next_line = ' '.join(load_line(arr)) + " "
 
     user_line = list()
-
+    global font
+    if not font:
+        font = set_font()
     # TEST
     l = WordLine(font,  WHITE, cur_line)
     l.move_up()
     allSprites.add(l)
+    articleSprites.add(l)
     
     l2 = WordLine(font, WHITE, next_line)
     allSprites.add(l2)
-
+    articleSprites.add(l2)
+    idx = 0
+    leave_key = None
+    
     while not done:
         screen.fill(BLACK)
         #
         # Event handle
         #
+        shifted = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
                 pygame.quit()
+            elif event.type == pygame.KEYDOWN:
+                # TODO:
+                #   Move back up, rather than quit.
+                if event.key == pygame.K_q and ( event.mod & pygame.KMOD_LCTRL ):
+                    pygame.quit()
+                if event.mod & pygame.KMOD_SHIFT:
+                    shifted = True
+                pressed_key = get_key_pressed(event)
 
-
+                # Early Sound Feedback
+                if pressed_key == '\b':
+                    if user:
+                        load_and_play('key_press.ogg')
+                        user.pop()
+                        idx -= 1
+                elif pressed_key in ( 'SHIFT', 'CTRL', 'ALT' ):
+                    pass
+                else:
+                    if shifted:
+                        if pressed_key.isupper():
+                            pressed_key = pressed_key.lower()
+                        elif pressed_key.islower():
+                            pressed_key = pressed_key.upper()
+                        else:
+                            pass
+                    
+                    if pressed_key == cur_line[idx]:
+                        load_and_play('key_press.ogg')
+                        user.append(pressed_key)
+                        leave_key = None
+                    else:
+                        load_and_play('pig-oink.ogg')
+                        user.append(pressed_key)
+                        leave_key = pressed_key
+                    idx += 1
         allSprites.update()
         allSprites.draw(screen)
-                
-                
-        # Scrolling
-        typed_line = cur_line
-        cur_line = next_line
-        next_line = ' '.join(load_line(arr))
+        render_userinput( cur_line, user )
+        
+        if cur_line == ''.join(user):
+            # Scrolling
+            cur_line = next_line
+            next_line = ' '.join(load_line(arr)) + " "
 
+            for linesprite in articleSprites:
+                linesprite.move_up()
+            linesprite = WordLine(font, WHITE, next_line)
+            allSprites.add(linesprite)
+            articleSprites.add(linesprite)
+
+            for sp in articleSprites:
+                if sp.rect.y < 0:
+                    allSprites.remove(sp)
+                    articleSprites.remove(sp)
+            user = list()
+            idx = 0
         clock.tick(90)
         pygame.display.flip()    
-        #done = ( len(cur_line.strip()) == 0 )
+        done = ( len(cur_line.strip()) == 0 )
 
         
 def main_loop():
@@ -125,7 +201,8 @@ def main_loop():
     pygame.init()
     pygame.display.set_caption(TITLE)
 
-    article="alice.txt"
+    #article="alice.txt"
+    article = "godey.txt"
     main_screen(article)
     pygame.quit()
     

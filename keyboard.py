@@ -1,5 +1,6 @@
 import sys
 import pygame
+from pygame import *
 from const import *
 from keyboard import *
 
@@ -110,7 +111,10 @@ def get_key_pressed(event):
     elif event.key == pygame.K_SPACE:      pressed_key = ' '
     elif event.key == pygame.K_RETURN:     pressed_key = '\r'
     elif event.key == pygame.K_BACKSPACE:  pressed_key = '\b'
+    elif event.key in (K_LSHIFT, K_RSHIFT):  pressed_key = 'SHIFT'
+    elif event.key in (K_LCTRL, K_RCTRL):    pressed_key = 'CTRL'
+    elif event.key in (K_LALT, K_RALT):      pressed_key = 'ALT'        
     else:
         pressed_key = None
-        
+
     return pressed_key
