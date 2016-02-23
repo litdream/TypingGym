@@ -55,7 +55,7 @@ def set_font():
 def get_xoffset():
     if 'freemono' in pygame.font.get_fonts():
         # linux
-        return font_size/2
+        return font_size/2 + 2
     elif 'menlo' in pygame.font.get_fonts():
         # apple
         return font_size/2 + 2
@@ -138,6 +138,11 @@ def main_screen(fname):
     
     while not done:
         screen.fill(BLACK)
+        allSprites.update()
+        allSprites.draw(screen)
+        key_indicate(screen, ORANGE, cur_line[idx])
+        render_userinput( cur_line, user )
+        
         #
         # Event handle
         #
@@ -181,9 +186,6 @@ def main_screen(fname):
                         user.append(pressed_key)
                         leave_key = pressed_key
                     idx += 1
-        allSprites.update()
-        allSprites.draw(screen)
-        render_userinput( cur_line, user )
         
         if cur_line == ''.join(user):
             # Scrolling

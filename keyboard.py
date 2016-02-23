@@ -22,10 +22,12 @@ def key_indicate(screen, color, punch):
         location = load_location_file()
 
     try:
+        punch = punch.lower()
         loc = location[punch]
         pygame.draw.circle(screen, color, loc, 15, 4)
     except KeyError:
-        pass
+        if punch == ' ':
+            pygame.draw.circle(screen, color, (280,545), 15, 4)
 
 def finger_indicate(screen, color, punch):
     def _triangle(offset, fill=False):
