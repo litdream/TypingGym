@@ -52,6 +52,17 @@ def set_font():
         font = pygame.font.SysFont("consolas", font_size)
     return font
 
+def get_xoffset():
+    if 'freemono' in pygame.font.get_fonts():
+        # linux
+        return font_size/2
+    elif 'menlo' in pygame.font.get_fonts():
+        # apple
+        return font_size/2 + 2
+    else:
+        # windows
+        return font_size/2 + 1
+    
 def render_userinput( cur, user ):
     global font
     if not font:
@@ -65,7 +76,7 @@ def render_userinput( cur, user ):
         else:
             text = font.render(c, True, RED)            
         screen.blit(text, (tx, ty))
-        tx+= font_size/2 + 2
+        tx+= get_xoffset()
     
 def load_line(lst, line_length=None):
     if line_length is None:
