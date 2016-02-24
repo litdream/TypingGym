@@ -253,7 +253,8 @@ def main_loop():
     pygame.display.set_caption(TITLE)
 
     #article="alice.txt"
-    article = "godey.txt"
+    #article = "godey.txt"
+    article = "article.txt"
     main_screen(article)
     pygame.quit()
     
