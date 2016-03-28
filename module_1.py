@@ -4,7 +4,7 @@ import sys
 import pygame
 import random
 import copy
-import time
+import time as python_time
 from const import *
 from keyboard import *
 from word_dict import *
@@ -31,13 +31,13 @@ def clap():
     screen = pygame.display.set_mode((600,600))
     clock = pygame.time.Clock()
     
-    expire = time.time() + 1.5
+    expire = python_time.time() + 1.5
     img1 = pygame.image.load("clap1.png").convert()
     img2 = pygame.image.load("clap2.png").convert()
 
     img = img1
     load_and_play('applause.ogg')
-    while time.time() < expire:
+    while python_time.time() < expire:
         screen.fill(BLACK)
         screen.blit(img, (100,100))
 
