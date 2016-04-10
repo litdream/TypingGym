@@ -18,8 +18,8 @@ def main():
         
     with open(fn) as fh:
         for word in fh:
-            if len(word.strip()) <3:
-                continue
+            #if len(word.strip()) <3:
+            #    continue
             if word.startswith("http"):
                 continue
             
