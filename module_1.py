@@ -99,6 +99,10 @@ def question_loop(word):
                 pressed_key = get_key_pressed(event)
 
                 # Early Sound Feedback
+
+                #DEBUG:
+                print(word, i, pressed_key)
+                
                 if pressed_key == word[i]:
                     load_and_play('key_press.ogg')
                     i += 1
@@ -161,7 +165,8 @@ def main_loop():
         clap()
     
     _lvl_player("asdf", all_words[0], 5, 10, increment=1)
-    _lvl_player("jkl;", all_words[0] + all_words[1], 3, 30, increment=2)
+    _lvl_player("jkl;", all_words[1], 3, 20, increment=2)
+    #_lvl_player("jkl;", all_words[1], 3, 30, increment=2)
     _lvl_player("qwer", all_words[2], 5, 20, increment=3)
     _lvl_player("uiop", all_words[3], 5, 20, increment=4)
     _lvl_player("qweruiop", all_words[4], 3, 15, increment=5)
