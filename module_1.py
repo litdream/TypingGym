@@ -163,7 +163,9 @@ def main_loop():
         clap()
         word_practice(words, wcnt)
         clap()
-    
+        
+    _lvl_player("abcdefghijklmnopqrstuvwxyz", all_words[11], 1, increment=11)
+        
     _lvl_player("asdf", all_words[0], 5, 10, increment=1)
     _lvl_player("jkl;", all_words[1], 3, 20, increment=2)
     #_lvl_player("jkl;", all_words[1], 3, 30, increment=2)
@@ -176,7 +178,8 @@ def main_loop():
     _lvl_player("tgbyhn", all_words[8], increment=9)
     _lvl_player("asdfjklqweruiopzxcvnm", all_words[9], 1, increment=10)
     _lvl_player("asdfjkltgbyhn", all_words[10], 2, increment=11)
-
+    _lvl_player("abcdefghijklmnopqrstuvwxyz", all_words[11], 2, increment=11)
+    
     pygame.quit()
     
 if __name__ == '__main__':
