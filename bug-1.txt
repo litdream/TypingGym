@@ -1,0 +1,24 @@
+('c', [], 0, 'c')
+('v', [], 0, 'v')
+('x', [], 0, 'x')
+('m', [], 0, 'm')
+('lack', [], 0, 'l')
+('lack', ['l'], 1, 'a')
+('lack', ['l', 'a'], 2, 'c')
+('lack', ['l', 'a', 'c'], 3, 'k')
+('mv', [], 0, 'm')
+('mv', ['m'], 1, 'v')
+('mv', ['m', 'v'], 2, 'b')
+('mv', ['m', 'v'], 2, 'b')
+Traceback (most recent call last):
+  File "module_1.py", line 188, in <module>
+    main_loop()
+  File "module_1.py", line 177, in main_loop
+    _lvl_player("zxcvm", all_words[5], increment=6)
+  File "module_1.py", line 168, in _lvl_player
+    word_practice(words, wcnt)
+  File "module_1.py", line 150, in word_practice
+    question_loop(q.pop())
+  File "module_1.py", line 106, in question_loop
+    if pressed_key == word[i]:
+IndexError: string index out of range

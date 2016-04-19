@@ -101,18 +101,31 @@ def question_loop(word):
                 # Early Sound Feedback
 
                 #DEBUG:
-                print(word, i, pressed_key)
-                
-                if pressed_key == word[i]:
-                    load_and_play('key_press.ogg')
-                    i += 1
-                    user.append(pressed_key)
-                    leave_key = None
-                else:
-                    load_and_play('pig-oink.ogg')
-                    leave_key = pressed_key
-                    score -= 1
+                #
+                #  There is unknown error happening.
+                #  READ error text:  bug-1.txt
+                #  Why 'mv' was all collected, but continued this loop?
+                #
+                print(word, user, i, pressed_key)
+                try:
+                    if pressed_key == word[i]:
+                        load_and_play('key_press.ogg')
+                        i += 1
+                        user.append(pressed_key)
+                        leave_key = None
+                    else:
+                        load_and_play('pig-oink.ogg')
+                        leave_key = pressed_key
+                        score -= 1
+
+                except IndexError:
+                    print(word, user, i, pressed_key)
                     
+                    #BUG Workaround:     
+                    # BAD Practice, but, check again.
+                    if word == ''.join(user):
+                        break
+                
         # Render
         #   1: User feedback
         if pressed_key:
@@ -164,8 +177,6 @@ def main_loop():
         word_practice(words, wcnt)
         clap()
         
-    _lvl_player("abcdefghijklmnopqrstuvwxyz", all_words[11], 1, increment=11)
-        
     _lvl_player("asdf", all_words[0], 5, 10, increment=1)
     _lvl_player("jkl;", all_words[1], 3, 20, increment=2)
     #_lvl_player("jkl;", all_words[1], 3, 30, increment=2)
@@ -178,7 +189,7 @@ def main_loop():
     _lvl_player("tgbyhn", all_words[8], increment=9)
     _lvl_player("asdfjklqweruiopzxcvnm", all_words[9], 1, increment=10)
     _lvl_player("asdfjkltgbyhn", all_words[10], 2, increment=11)
-    _lvl_player("abcdefghijklmnopqrstuvwxyz", all_words[11], 2, increment=11)
+    _lvl_player("abcdefghijklmnopqrstuvwxyz", all_words[11], 1, increment=11)
     
     pygame.quit()
     
