@@ -98,6 +98,7 @@ class SpecialWord(WordRain):
         self.special = random.randint(0, len(Special.rev_lookup))
 
     def do_special(self, castle, wg, allg):
+        global gExtraSpeed
         if self.special == 0:
             global gHide
             gHide = 1
@@ -107,7 +108,6 @@ class SpecialWord(WordRain):
             Timer(5, _reset_hide, ()).start()
         
         elif self.special == 1:
-            global gExtraSpeed
             gExtraSpeed = 1
             def _reset_speed():
                 global gExtraSpeed
@@ -123,7 +123,6 @@ class SpecialWord(WordRain):
             Timer(5, _reset_speed, ()).start()
 
         elif self.special == 3:
-            global gExtraSpeed
             gExtraSpeed = -1
             def _reset_speed():
                 global gExtraSpeed
