@@ -1,1 +1,1 @@
-c:\Python27\python.exe module_2.py
+python module_2.py
