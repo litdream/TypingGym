@@ -255,6 +255,11 @@ def main_loop():
     #article="alice.txt"
     #article = "godey.txt"
     article = "article.txt"
+    try:
+        article = sys.argv[1]
+    except ValueError:
+        pass
+
     main_screen(article)
     pygame.quit()
     
