@@ -21,7 +21,7 @@ class WordLine(pygame.sprite.Sprite):
         self.rect.x = 10
         self.rect.y = 280
         self.target_y = 250
-        
+
     def update(self):
         while self.rect.y > self.target_y:
             self.rect.y -= 5
@@ -29,14 +29,14 @@ class WordLine(pygame.sprite.Sprite):
     def move_up(self):
         self.target_y -= 100
 
-        
+
 class UserLine(pygame.sprite.Sprite):
     def __init__(self, font):
         self.font = font
 
     def match_render(self, userlist, linelist):
         pass
-        
+
 font_size=18
 font = None
 def set_font():
@@ -62,7 +62,7 @@ def get_xoffset():
     else:
         # windows
         return font_size/2 + 1
-    
+
 def render_userinput( cur, user ):
     global font
     if not font:
@@ -74,10 +74,10 @@ def render_userinput( cur, user ):
         if cur[i] == c:
             text = font.render(c, True, GREEN)
         else:
-            text = font.render(c, True, RED)            
+            text = font.render(c, True, RED)
         screen.blit(text, (tx, ty))
         tx+= get_xoffset()
-    
+
 def load_line(lst, line_length=None):
     if line_length is None:
         if sys.platform.startswith('linux'):
@@ -86,7 +86,7 @@ def load_line(lst, line_length=None):
             line_length = 45
         else:
             line_length = 50
-    
+
     rtn = list()
     while lst and line_length > len(' '.join(rtn)):
         rtn.append(lst.pop())
@@ -103,7 +103,7 @@ def render_stat(cpm, mpm):
     tx,ty = 10,10
     text = font.render('%03d keys per minute,      %02d words per minute' % (cpm, mpm), True, WHITE  )
     screen.blit(text, (tx, ty))
-    
+
 
 def main_screen(fname):
     import time
@@ -123,7 +123,7 @@ def main_screen(fname):
     keyimg = RealKeyboard()
     allSprites.add(keyimg)
     articleSprites = pygame.sprite.Group()
-    
+
     done = False
     pressed_key = None
     clock = pygame.time.Clock()
@@ -145,7 +145,7 @@ def main_screen(fname):
     l.move_up()
     allSprites.add(l)
     articleSprites.add(l)
-    
+
     l2 = WordLine(font, WHITE, next_line)
     allSprites.add(l2)
     articleSprites.add(l2)
@@ -178,7 +178,7 @@ def main_screen(fname):
                 mpm = len( str_sofar.split()) / interval * 60
                 last_updated = now
             render_stat(cpm, mpm)
-            
+
         #
         # Event handle
         #
@@ -195,6 +195,7 @@ def main_screen(fname):
                 if event.mod & pygame.KMOD_SHIFT:
                     shifted = True
                 pressed_key = get_key_pressed(event)
+                pressed_key = decorate_key(pressed_key, shifted)
 
                 # Early Sound Feedback
                 if pressed_key == '\b':
@@ -212,7 +213,7 @@ def main_screen(fname):
                             pressed_key = pressed_key.upper()
                         else:
                             pass
-                    
+
                     if pressed_key == cur_line[idx]:
                         load_and_play('key_press.ogg')
                         user.append(pressed_key)
@@ -222,10 +223,15 @@ def main_screen(fname):
                         user.append(pressed_key)
                         leave_key = pressed_key
                     idx += 1
-        
+            elif event.type == pygame.KEYUP:
+                if event.mod & pygame.KMOD_SHIFT:
+                    shifted = False
+
+        #print(user)
+
         if cur_line == ''.join(user):
             typed_lines.append(cur_line)
-            
+
             # Scrolling
             cur_line = next_line
             next_line = ' '.join(load_line(arr)) + " "
@@ -243,17 +249,15 @@ def main_screen(fname):
             user = list()
             idx = 0
         clock.tick(90)
-        pygame.display.flip()    
+        pygame.display.flip()
         done = ( len(cur_line.strip()) == 0 )
 
-        
+
 def main_loop():
     global score
     pygame.init()
     pygame.display.set_caption(TITLE)
 
-    #article="alice.txt"
-    #article = "godey.txt"
     article = "article.txt"
     try:
         article = sys.argv[1]
@@ -262,6 +266,6 @@ def main_loop():
 
     main_screen(article)
     pygame.quit()
-    
+
 if __name__ == '__main__':
     main_loop()

@@ -15,7 +15,7 @@ class RealKeyboard(pygame.sprite.Sprite):
         self.rect.y=300
 
 
-location = None        
+location = None
 def key_indicate(screen, color, punch):
     global location
     if not location:
@@ -35,9 +35,9 @@ def finger_indicate(screen, color, punch):
                 (85+offset, 340),
                 (125+offset, 340)  ]
         if fill:
-            pygame.draw.polygon(screen, color, lst , 0)        
+            pygame.draw.polygon(screen, color, lst , 0)
         else:
-            pygame.draw.polygon(screen, color, lst , 4)        
+            pygame.draw.polygon(screen, color, lst , 4)
 
     for i in range(0, 160, 40):
         if i==0 and punch in "qaz`1":
@@ -50,7 +50,7 @@ def finger_indicate(screen, color, punch):
             _triangle(i, True)
         else:
             _triangle(i)
-            
+
     for i in range(180, 340, 40):
         if i==180 and punch in "yhnujm67":
             _triangle(i, True)
@@ -63,7 +63,31 @@ def finger_indicate(screen, color, punch):
         else:
             _triangle(i)
 
-            
+def decorate_key(prkey, shifted):
+    rtn = prkey
+    if shifted:
+        if prkey == '[':   rtn = '{'
+        elif prkey == ']':   rtn = '}'
+        elif prkey == '1':   rtn = '!'
+        elif prkey == '2':   rtn = '@'
+        elif prkey == '3':   rtn = '#'
+        elif prkey == '4':   rtn = '$'
+        elif prkey == '5':   rtn = '%'
+        elif prkey == '6':   rtn = '^'
+        elif prkey == '7':   rtn = '&'
+        elif prkey == '8':   rtn = '*'
+        elif prkey == '9':   rtn = '('
+        elif prkey == '0':   rtn = ')'
+        elif prkey == '-':   rtn = '_'
+        elif prkey == '=':   rtn = '+'
+        elif prkey == '\\':  rtn = '|'
+        elif prkey == ';':   rtn = ':'
+        elif prkey == "'":   rtn = '"'
+        elif prkey == ',':   rtn = '<'
+        elif prkey == '.':   rtn = '>'
+        elif prkey == '/':   rtn = '?'
+    return rtn
+
 def get_key_pressed(event):
     if event.key == pygame.K_a:   pressed_key = 'a'
     elif event.key == pygame.K_b:   pressed_key = 'b'
@@ -83,7 +107,7 @@ def get_key_pressed(event):
     elif event.key == pygame.K_p:   pressed_key = 'p'
     elif event.key == pygame.K_q:   pressed_key = 'q'
     elif event.key == pygame.K_r:   pressed_key = 'r'
-    elif event.key == pygame.K_s:   pressed_key = 's'                    
+    elif event.key == pygame.K_s:   pressed_key = 's'
     elif event.key == pygame.K_t:   pressed_key = 't'
     elif event.key == pygame.K_u:   pressed_key = 'u'
     elif event.key == pygame.K_v:   pressed_key = 'v'
@@ -113,9 +137,11 @@ def get_key_pressed(event):
     elif event.key == pygame.K_SPACE:      pressed_key = ' '
     elif event.key == pygame.K_RETURN:     pressed_key = '\r'
     elif event.key == pygame.K_BACKSPACE:  pressed_key = '\b'
+    elif event.key == pygame.K_LEFTBRACKET: pressed_key = '['
+    elif event.key == pygame.K_RIGHTBRACKET: pressed_key = ']'
     elif event.key in (K_LSHIFT, K_RSHIFT):  pressed_key = 'SHIFT'
     elif event.key in (K_LCTRL, K_RCTRL):    pressed_key = 'CTRL'
-    elif event.key in (K_LALT, K_RALT):      pressed_key = 'ALT'        
+    elif event.key in (K_LALT, K_RALT):      pressed_key = 'ALT'
     else:
         pressed_key = None
 
